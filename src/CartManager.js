@@ -26,13 +26,13 @@ class CartManger{
     addCart = async() => {
         const carts = await this.getCarts();
 
-        let newCart={
+        const newCart={
 
         }
         newCart.id = carts.length ? carts[carts.length - 1].id + 1 : 1;
         newCart.products = []
         carts.push(newCart);
-        await cartManager.auxiliar(carts);
+        await this.auxiliar(carts);
         return 'Saved';
     }
 
@@ -59,22 +59,21 @@ class CartManger{
         const index2= carts[index].products.findIndex(productaux => productaux.product ===pid)
         if(index2 === -1){
 
-            let newProduct={
+            const newProduct={
                 "product": pid,
 				"quantity": 1
             }
             carts[index].products.push(newProduct);
-            await cartManager.auxiliar(carts);
+            await this.auxiliar(carts);
             return 'Added';
         } 
         carts[index].products[index2].quantity += 1
         await fs.promises.unlink(this.path);
-        await cartManager.auxiliar(carts);
+        await this.auxiliar(carts);
         return 'Added';
 
     }
 
 }
 
-const cartManager = new CartManger('./files/Carts.json') 
 export default CartManger;

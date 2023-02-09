@@ -4,7 +4,7 @@ import ProductManager from "../ProductManager.js";
 const router = Router()
 
 
-const productManager = new ProductManager('../src/files/Products1.json') 
+const productManager = new ProductManager('./src/files/Products1.json') 
 
 
 // get http://localhost:8080/api/products
@@ -15,14 +15,14 @@ router.get('/',  async (req, res) => {
        return  res.send(products)
     }
     
-    let limitProducts = products.slice(0,limit)
+    const limitProducts = products.slice(0,limit)
     res.send(limitProducts)
 }) 
 
 // get http://localhost:8080/api/products/:pid
 router.get('/:pid', async (req, res) => {
     const {pid} = req.params
-    let id = parseInt(pid);
+    const id = parseInt(pid);
     const product = await productManager.getProductById(id)      
     res.send(product)
 })
@@ -30,8 +30,8 @@ router.get('/:pid', async (req, res) => {
 
 // POST http://localhost:8080/api/products /
 router.post('/', async (request, response) =>{
-    //mada el  cliente request 
-    let newProduct = request.body
+
+    const newProduct = request.body
     const result = await productManager.addProduct(newProduct)
     response.status(201).send(result)
 })
@@ -39,9 +39,8 @@ router.post('/', async (request, response) =>{
 // PUT http://localhost:8080/api/products/:pid
 router.put('/:pid', async (req, res) =>{
     const { pid } = req.params
-    let id = parseInt(pid);
-    let upProduct = req.body
-    console.log(upProduct)
+    const id = parseInt(pid);
+    const upProduct = req.body
     const result= await productManager.updateProduct(id,upProduct)
     res.status(201).send(result)
 })
@@ -49,7 +48,7 @@ router.put('/:pid', async (req, res) =>{
 // DELETE http://localhost:8080/api/products/:pid
 router.delete('/:pid', async (req, res) => {
     const {pid} = req.params
-    let id = parseInt(pid);
+    const id = parseInt(pid);
     const product = await productManager.deleteProduct(id)      
     res.send(product)
 })

@@ -30,8 +30,12 @@ class ProductManager{
 
     addProduct = async(newProduct) => {
         const products = await this.getProducts();
+        console.log(newProduct)
+        if(Object.keys(newProduct).length === 0){
+            return 'Debe ingresar un json'
+        }
 
-        if (!newProduct.title || !newProduct.description || !newProduct.price  ||  !newProduct.code || !newProduct.stock || !newProduct.status) {
+        if (!newProduct.title || !newProduct.description || !newProduct.price  ||  !newProduct.code || !newProduct.stock || !newProduct.status || !newProduct.category) {
             return 'Falta completar campos';
         }
         const existingProduct = products.find(product => product.code === newProduct.code);
@@ -40,7 +44,7 @@ class ProductManager{
         }
         newProduct.id = products.length ? products[products.length - 1].id + 1 : 1;
         products.push(newProduct);
-        await productManager.auxiliar(products);
+        await this.auxiliar(products);
         return 'Saved';
     }
 
@@ -58,14 +62,13 @@ class ProductManager{
 
     updateProduct = async(id,upProduct) =>{
         const products = await this.getProducts();
-        console.log(products)
         const index= products.findIndex(product => product.id ===id)
         if(index === -1){
 
             return `Not found`;
         } 
 
-        if (!upProduct.title || !upProduct.description || !upProduct.price  ||  !upProduct.code || !upProduct.stock || !upProduct.status) {
+        if (!upProduct.title || !upProduct.description || !upProduct.price  ||  !upProduct.code || !upProduct.stock || !upProduct.status || !upProduct.category) {
             return 'Falta completar campos';
         }
 
@@ -73,7 +76,7 @@ class ProductManager{
         products[index]= upProduct
         products[index].id= id
         await fs.promises.unlink(this.path);
-        await productManager.auxiliar(products);
+        await this.auxiliar(products);
         return `modified`;
     }
 
@@ -87,61 +90,11 @@ class ProductManager{
         } 
         products.splice(index,1);
         await fs.promises.unlink(this.path);
-        await productManager.auxiliar(products);
+        await this.auxiliar(products);
         return `Delete`;        
         
     }
 
 }
-
-
-const productManager = new ProductManager('./files/Products1.json') 
-
-
-const env = async() =>{
-
-    let product ={
-        title: 'Play Station 5',
-        description: 'Sony',
-        price:120000,
-        thumbnail:'ruta',
-        code:96, 
-        stock:7,
-//        id:7
-        
-    }
-
-/*
-      //Cargar productos
-   let result = await productManager.addProduct(product);
-   console.log(result);
-*/
-
-/*
-    //Obtener productos
-    let response = await productManager.getProducts();
-    console.log(response);
-*/
-
-/*
-    //Obtener un producto por id
-     let response2= await productManager.getProductById(1);
-     console.log (response2)
-*/
-
-/*
-    //Modificar un producto 
-     let modifie = await productManager.updateProduct(product);
-     console.log(modifie);
-*/
-
-/*
-    //Eliminar un producto
-     let deleteP = await productManager.deleteProduct(3);
-     console.log(deleteP);
-*/
-
-}
-env();
 
 export default ProductManager;
